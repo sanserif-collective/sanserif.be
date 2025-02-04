@@ -1,0 +1,36 @@
+secrets:
+  strapi-database-password:
+    file: strapi-database-password.txt
+
+volumes:
+  strapi-database-data:
+
+networks:
+  caddy:
+    external: true
+
+services:
+  strapi-database:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: /run/secrets/strapi-database-password
+    volumes:
+      - strapi-database-data:/var/lib/postgresql/data
+    secrets:
+      - strapi-database-password
+
+  strapi:
+    build: .
+    restart: always
+    environment:
+      DATABASE_HOST: strapi-database
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: /run/secrets/strapi-database-password
+    secrets:
+      - strapi-database-password
+    depends_on:
+      - strapi-database

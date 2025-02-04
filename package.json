@@ -10,5 +10,11 @@
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
     "prettier-plugin-tailwindcss": "^0.5.11"
+  },
+  "pnpm": {
+    "supportedArchitectures": {
+      "os": ["win32", "darwin", "linux", "current"],
+      "cpu": ["x64", "arm64", "arm64v8"]
+    }
   }
 }
