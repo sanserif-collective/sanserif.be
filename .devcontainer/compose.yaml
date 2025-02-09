@@ -1,33 +1,41 @@
+name: sanserif-devcontainer
+
+networks:
+  default:
+    name: ${COMPOSE_PROJECT_NAME}-net
+
 volumes:
-  database-data:
-  storage-data:
+  s3-data:
+    name: ${COMPOSE_PROJECT_NAME}-s3-data
+  strapi-db-data:
+    name: ${COMPOSE_PROJECT_NAME}-strapi-db-data
 
 services:
-  workspace:
-    container_name: sanserif-workspace
-    image: node:20-alpine
-    command: sleep infinity
-    expose:
-      - '1337'
-      - '4321'
-    volumes:
-      - ../.:/workspace:cached
-
-  database:
-    container_name: sanserif-database
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    volumes:
-      - database-data:/var/lib/postgresql/data
-
-  storage:
-    container_name: sanserif-storage
+  s3:
+    container_name: ${COMPOSE_PROJECT_NAME}-s3
     image: localstack/localstack
     environment:
       SERVICES: s3
       PERSISTENCE: 1
     volumes:
-      - storage-data:/var/lib/localstack
+      - s3-data:/var/lib/localstack
+
+  strapi-db:
+    container_name: ${COMPOSE_PROJECT_NAME}-strapi-db
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - strapi-db-data:/var/lib/postgresql/data
+
+  workspace:
+    container_name: ${COMPOSE_PROJECT_NAME}-workspace
+    image: node:20-alpine
+    command: sleep infinity
+    depends_on:
+      - s3
+      - strapi-db
+    volumes:
+      - ../.:/workspace:cached
