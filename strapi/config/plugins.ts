@@ -6,11 +6,11 @@ export default ({ env }) => ({
         baseUrl: env('S3_BASE_URL', 'http://127.0.0.1:4566/sanserif'),
         accessKeyId: env('S3_ACCESS_KEY_ID', 'test'),
         secretAccessKey: env('S3_ACCESS_SECRET', 'test'),
-        endpoint: env('S3_ENDPOINT', 'http://storage:4566'),
+        endpoint: env('S3_ENDPOINT', 'http://s3:4566'),
         region: env('S3_REGION', 'auto'),
         forcePathStyle: env.bool('S3_FORCE_PATH_STYLE', true),
         params: {
-          Bucket: env('S3_BUCKET_NAME', 'sanserif'),
+          Bucket: env('S3_BUCKET_NAME', 'strapi'),
         },
       },
       actionOptions: {
